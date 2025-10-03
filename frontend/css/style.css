@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-dark .navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.display-4 {
+    font-weight: 300;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transition: transform .2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    transition: background-color .2s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.bg-info {
+    background-color: #17a2b8 !important;
+}
+
+.bg-primary {
+    background-color: #007bff !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+}
+
+.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+#historical-chart, #probability-chart {
+    max-height: 300px;
+}
