@@ -6,4 +6,5 @@ app_name = 'userside'
 urlpatterns = [
     path('', views.home, name='home'),
     path('dash', views.dashboard, name='dashboard'),
+    path('plan', views.weather_planner_view, name='weather_planner'),
 ]

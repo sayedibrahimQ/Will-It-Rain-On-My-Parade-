@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 url = "https://power.larc.nasa.gov/api/temporal/daily/point"
 params = {
-    "parameters": "T2M,T2M_MAX,T2M_MIN,PRECTOT",
+    "parameters": "T2M,T2M_MAX,T2M_MIN,PRECTOT,WS2M,ALLSKY_KT",
     "community": "AG",
     "longitude": 31.2357,
     "latitude": 30.0444,
