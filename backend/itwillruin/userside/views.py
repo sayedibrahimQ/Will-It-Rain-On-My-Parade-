@@ -16,19 +16,18 @@ def home(request):
     
     return render(request, 'index.html')
 
+def map(request):
+    return render(request, 'map.html')
+
 def dashboard(request):
     
     if request.method == "POST":
         location = request.POST.get("location")  # text input (if user typed)
-        latlon = request.POST.get("latlon")      # hidden input (from map click)
+        # hidden input (from map click)
         date = request.POST.get("date")
-        # If user picked from map
-        if latlon:
-            lat, lon = latlon.split(",")
-        else:
-            lat, lon = None, None
-        lat = latlon.split(",")[0]
-        lon = latlon.split(",")[1]
+
+        lat = request.POST.get("latitude")  
+        lon = request.POST.get("longitude")  
         location = get_city_from_latlon(lat, lon)
         
         historical_data = {

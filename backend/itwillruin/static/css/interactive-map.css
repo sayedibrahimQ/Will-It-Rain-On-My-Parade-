@@ -1,0 +1,39 @@
+/* Interactive Map Page Specific Styles */
+
+.map-container {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+#map {
+    height: 70vh;
+}
+
+.map-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 400; /* Above map but below other UI */
+    background-color: rgba(44, 44, 44, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    width: 350px;
+    border: 1px solid var(--border-color);
+}
+
+.map-controls h3 {
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}

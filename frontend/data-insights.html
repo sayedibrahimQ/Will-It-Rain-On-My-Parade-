@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Insights EventWeather</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <a href="index.html">🌍 EventWeather</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="prediction.html">Prediction</a></li>
+            <li><a href="interactive-map.html">Map</a></li>
+            <li><a href="data-insights.html" class="active">Insights</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="team.html">Team</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1>Data Insights</h1>
+                <p>Analytics and trends from our precipitation data.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>Rainfall Over Time (Last 7 Days)</h3>
+                    <div class="chart-container">
+                        <canvas id="rainfall-chart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Average Rainfall by Region</h3>
+                    <div class="chart-container">
+                        <canvas id="region-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 2rem;">
+                <h3>Understanding the Data</h3>
+                <p>Our predictions are based on NASA's Integrated Multi-satellitE Retrievals for GPM (IMERG) dataset. The values for precipitation are given in mm/hr. The probability of liquid precipitation and the random error associated with the measurement are also provided.</p>
+                <p>It's important to note that these are probabilistic forecasts, and while they are based on advanced satellite data, they come with a degree of uncertainty. The 'randomError' value gives an indication of this uncertainty.</p>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 RainCast. Created for the NASA Space Apps Challenge.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

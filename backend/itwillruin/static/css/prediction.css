@@ -1,0 +1,162 @@
+/* Prediction Page Specific Styles */
+
+.prediction-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.event-summary {
+    background-color: var(--surface-color);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.event-summary h2 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.weather-outcome {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.weather-outcome .outcome-icon {
+    font-size: 4rem;
+}
+
+.weather-outcome h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    color: var(--text-color);
+}
+
+.weather-outcome .confidence,
+.weather-outcome .intensity {
+    font-size: 1.2rem;
+    color: var(--muted-text-color);
+}
+
+.comfort-analysis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.comfort-badge {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.comfort-badge:nth-child(1) { animation-delay: 0.1s; }
+.comfort-badge:nth-child(2) { animation-delay: 0.2s; }
+.comfort-badge:nth-child(3) { animation-delay: 0.3s; }
+.comfort-badge:nth-child(4) { animation-delay: 0.4s; }
+
+.actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.actions .btn {
+    margin: 0 0.5rem;
+}
+
+#scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1001;
+}
+
+#scroll-to-top:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.comfort-badge .badge-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.comfort-badge h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.comfort-badge p {
+    font-size: 1rem;
+    color: var(--muted-text-color);
+}
+
+.badge-comfortable { border-left: 5px solid #28a745; }
+.badge-risky { border-left: 5px solid #ffc107; }
+.badge-not-suitable { border-left: 5px solid #dc3545; }
+
+.time-based-forecast,
+.recommendations,
+.confidence-source {
+    background-color: var(--surface-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.time-based-forecast h3,
+.recommendations h3,
+.confidence-source h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.recommendations ul {
+    list-style-type: '👉';
+    padding-left: 1.5rem;
+}
+
+.recommendations li {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+    color: var(--muted-text-color);
+}
+
+.confidence-source p {
+    font-size: 1rem;
+    color: var(--muted-text-color);
+    text-align: center;
+}

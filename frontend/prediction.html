@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction - EventWeather</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/prediction.css">
+</head>
+<body>
+
+    <nav class="main-nav">
+        <div class="nav-logo">
+            <a href="index.html">🌧️ RainCast</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="prediction.html" class="active">Prediction</a></li>
+            <li><a href="interactive-map.html">Map</a></li>
+            <li><a href="data-insights.html">Insights</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="team.html">Team</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <div class="prediction-container">
+            
+            <!-- 1. Event Summary -->
+            <section class="event-summary">
+                <h2>Event in Cairo, Egypt – Oct 5, 2025, 4PM–8PM</h2>
+            </section>
+
+            <!-- 2. Weather Outcome -->
+            <section class="weather-outcome">
+                <div class="outcome-icon">☀️</div>
+                <h3>It will likely be dry.</h3>
+                <p class="confidence"><strong>Confidence:</strong> 85%</p>
+                <p class="intensity"><strong>Expected Rainfall:</strong> 0 mm/hr</p>
+            </section>
+
+            <!-- 3. Comfort Analysis -->
+            <section class="comfort-analysis">
+                <div class="comfort-badge badge-risky">
+                    <div class="badge-icon">🌡️</div>
+                    <h4>Temperature</h4>
+                    <p>32°C - Hot</p>
+                </div>
+                <div class="comfort-badge badge-comfortable">
+                    <div class="badge-icon">💧</div>
+                    <h4>Rainfall</h4>
+                    <p>0 mm/hr - Dry</p>
+                </div>
+                <div class="comfort-badge badge-comfortable">
+                    <div class="badge-icon">💨</div>
+                    <h4>Wind</h4>
+                    <p>10 km/h - Light Breeze</p>
+                </div>
+                <div class="comfort-badge badge-risky">
+                    <div class="badge-icon">😓</div>
+                    <h4>Humidity</h4>
+                    <p>70% - Sweaty</p>
+                </div>
+            </section>
+
+            <!-- 4. Time-based Forecast -->
+            <section class="time-based-forecast">
+                <h3>24-Hour Forecast</h3>
+                <div class="chart-container">
+                    <canvas id="forecast-chart"></canvas>
+                </div>
+            </section>
+
+            <!-- 5. Recommendations -->
+            <section class="recommendations">
+                <h3>Recommendations</h3>
+                <ul>
+                    <li>Safe to proceed, but high humidity – plan for ventilation.</li>
+                    <li>Light winds, outdoor decorations are safe.</li>
+                    <li>Stay hydrated due to high temperatures.</li>
+                </ul>
+            </section>
+
+            <!-- 6. Confidence & Data Source -->
+            <section class="confidence-source">
+                <p>Forecast powered by NASA IMERG V07 & POWER API. Confidence: 82% (based on historical + satellite data).</p>
+            </section>
+
+            <!-- 7. Actions -->
+            <section class="actions">
+                <button class="btn btn-secondary" id="print-btn">🖨️ Print</button>
+                <button class="btn btn-secondary" id="share-btn">🔗 Share</button>
+            </section>
+
+        </div>
+    </main>
+
+    <button id="scroll-to-top" title="Go to top">↑</button>
+
+    <footer class="footer">
+        <p>&copy; 2025 RainCast. Created for the NASA Space Apps Challenge.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

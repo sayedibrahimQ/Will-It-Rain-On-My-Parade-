@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<main class="main-content">
+    <div class="container">
+            <div class="page-header">
+                <h1>Interactive Event Planner</h1>
+                <p>Select a location and date to get your event forecast.</p>
+            </div>
+
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <h3>Event Details</h3>
+                    <form id="event-form" method="POST" action="{% url 'userside:dashboard' %}">
+                        {% csrf_token %}
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                        <div class="form-group full-width">
+                            <label for="date">Date & Time</label>
+                            <input type="datetime-local" id="date" name="date" class="form-control">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="event-type">Event Type</label>
+                            <select id="event-type" name="event_type" class="form-control">
+                                <option value="outside">Outside Event</option>
+                                <option value="inside">Inside Event</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Get Forecast</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}
