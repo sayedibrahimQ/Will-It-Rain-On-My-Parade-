@@ -17,8 +17,10 @@ data = r.json()
 # Convert to pandas DataFrame
 df = pd.DataFrame(data['properties']['parameter'])
 
-# Set date index
-df.index.name = "Date"
+df.index = pd.to_datetime(df.index, format="%Y%m%d")
 
-# Save to Excel
-df.to_excel("cairo_weather.xlsx")
+# Reset index if you want a Date column instead of index
+df = df.reset_index().rename(columns={"index": "Date"})
+
+
+df.to_excel("cairo_weather.xlsx", index=False)
