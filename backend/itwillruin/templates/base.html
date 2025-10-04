@@ -17,11 +17,10 @@
             <a href="index.html">🌧️ RainCast</a>
         </div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="prediction.html">Prediction</a></li>
-            <li><a href="interactive-map.html" class="active">Map</a></li>
-            <li><a href="data-insights.html">Insights</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="{% url "userside:home" %}">Home</a></li>
+            <li><a href="{% url "userside:map" %}" class="active">Map</a></li>
+            {% comment %} <li><a href="data-insights.html">Insights</a></li> {% endcomment %}
+            <li><a href="{% url "userside:about" %}">About</a></li>
             <li><a href="team.html">Team</a></li>
         </ul>
     </nav>

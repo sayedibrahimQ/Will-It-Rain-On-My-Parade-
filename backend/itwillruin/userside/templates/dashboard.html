@@ -3,109 +3,190 @@
 
 {% block content %}
 
-<br>
-<br>
-<br>
-<br>
-<br>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <h1 class="display-4">Results for {{ location }} on {{ date }}</h1>
-            </div>
-        </div>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
 
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card text-white bg-danger mb-3">
-                    <div class="card-header">🔥 Very Hot</div>
-                    <div class="card-body">
-                        <h5 class="card-title">35% Probability</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-info mb-3">
-                    <div class="card-header">❄️ Very Cold</div>
-                    <div class="card-body">
-                        <h5 class="card-title">10% Probability</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">🌧 Very Wet</div>
-                    <div class="card-body">
-                        <h5 class="card-title">60% Probability</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-warning mb-3">
-                    <div class="card-header">💨 Very Windy</div>
-                    <div class="card-body">
-                        <h5 class="card-title">20% Probability</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-white bg-secondary mb-3">
-                    <div class="card-header">😓 Uncomfortable</div>
-                    <div class="card-body">
-                        <h5 class="card-title">45% Probability</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
+<main class="main-content">
+    <div class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1>Event Weather Dashboard for {{ location }}</h1>
+            <p class="subtitle">Analysis based on forecast data for {{ date }}</p>
+        </section>
 
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Historical Average Temperature & Precipitation</h5>
-                        <canvas id="historical-chart"></canvas>
-                    </div>
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+
+            <!-- Stat Cards -->
+            <div class="stat-card status-{{ day_data.temperature.status }}">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5" /><path d="M10 9l4 0" /></svg>
+                </div>
+                <div class="stat-content">
+                    <h4>Temperature</h4>
+                    <p>{{ day_data.temperature.value|floatformat:1 }}°C</p>
+                    <span>{{ day_data.temperature.condition }}</span>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Probabilities</h5>
-                        <canvas id="probability-chart"></canvas>
-                    </div>
+
+            <div class="stat-card status-{{ day_data.rainfall.status }}">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" /><path d="M9 15h1a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1z" /></svg>
+                </div>
+                <div class="stat-content">
+                    <h4>Rainfall</h4>
+                    <p>{{ day_data.rainfall.value|floatformat:2 }} mm</p>
+                    <span>{{ day_data.rainfall.condition }}</span>
                 </div>
             </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <button class="btn btn-success">Download Results (CSV)</button>
-                <button class="btn btn-success">Download Results (JSON)</button>
+            
+            <div class="stat-card status-{{ day_data.windspeed.status }}">
+                <div class="stat-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 8h8.5a2.5 2.5 0 1 0 -2.34 -3.24" /><path d="M3 12h15.5a2.5 2.5 0 1 1 -2.34 3.24" /><path d="M4 16h5.5a2.5 2.5 0 1 1 -2.34 3.24" /></svg>
+                </div>
+                <div class="stat-content">
+                    <h4>Wind Speed</h4>
+                    <p>{{ day_data.windspeed.value|floatformat:1 }} m/s</p>
+                    <span>{{ day_data.windspeed.condition }}</span>
+                </div>
             </div>
-        </div>
 
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">AI Summary</h5>
-                        <p class="card-text">{{ ai_insights.summary }}</p>
-                        {% comment %} <p class="card-text">Based on the historical data and our predictive models, there is a high probability of wet conditions and a moderate probability of uncomfortable weather. The temperature is expected to be within the normal range for this time of year.</p> {% endcomment %}
-                        <br>
-                        <h5 class="card-title">Overall Outlook</h5>
-                        <p class="card-text">{{ ai_insights.parade_planner.overall_outlook }}</p>
-                        <br>
-                        <h5 class="card-title">Contingency Plan</h5>
-                        <p class="card-text">{{ ai_insights.parade_planner.contingency_plan }}</p>
-                        <br>
-                        <h5 class="card-title">Nasa Fun Fact</h5>
-                        <p class="card-text">{{ ai_insights.nasa_fun_fact }}</p>
-                        <br>
-                    </div>
+            <div class="stat-card status-{{ day_data.humidity.status }}">
+                <div class="stat-icon">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.8 15.3l-2.3 -2.3a5 5 0 0 1 7.1 -7.1l7.1 7.1a5 5 0 0 1 -7.1 7.1l-2.3 -2.3" /><path d="M12 20l-3.5 -3.5" /><path d="M16 16l-3.5 -3.5" /><path d="M8 12l-3.5 -3.5" /></svg>
+                </div>
+                <div class="stat-content">
+                    <h4>Humidity</h4>
+                    <p>{{ day_data.humidity.value|floatformat:0 }}%</p>
+                    <span>{{ day_data.humidity.condition }}</span>
+                </div>
+            </div>
+            
+            <!-- AI Insights Widget -->
+            <div class="widget ai-widget">
+                <h3><span class="icon">✨</span> AI Event Planner</h3>
+                <p>{{ ai_insights.summary }}</p>
+                <h4> Overall Outlook</h4>
+                <p>{{ ai_insights.parade_planner.overall_outlook }}</p>
+                <h4> Clothing Recommendation</h4>
+                <p>{{ ai_insights.parade_planner.clothing_recommendation }}</p>
+                <h4> Contingency Plan</h4>
+                <p>{{ ai_insights.parade_planner.contingency_plan }}</p>
+                <h4> Nasa Fun Fact</h4>
+                <p class="fun-fact">{{ ai_insights.nasa_fun_fact }}</p>
+            </div>
+
+            <!-- Forecast Range Chart -->
+            <div class="widget chart-widget">
+                <h3>Expected Weather Ranges</h3>
+                <div class="chart-wrapper">
+                    <canvas id="forecast-range-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- NEW: Future Outlook Cards -->
+            <div class="widget large-widget">
+                <h3>Future Outlook (Next 5 Months)</h3>
+                <p class="subtitle" style="margin-top: -1.2rem; margin-bottom: 1.5rem; color: var(--muted-text-color);">Useful for long-term planning or rescheduling.</p>
+                <div id="outlook-cards-container" class="outlook-cards-container">
+                    <!-- Mini cards will be generated by JavaScript here -->
+                </div>
+            </div>
+
+            <!-- Actions Widget -->
+            <div class="widget actions-widget">
+                <h3>Export Data</h3>
+                <p>Download the full report in your preferred format.</p>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary">Download PDF Report</button>
+                    <button class="btn btn-primary">Download JSON</button>
                 </div>
             </div>
         </div>
     </div>
+</main>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Load Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+<!-- =================================================================== -->
+<!--                  LOCAL SCRIPT FOR DASHBOARD CHARTS                  -->
+<!-- =================================================================== -->
+
+<!-- LOCAL SCRIPT WITH STATIC DATA -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("STATIC SCRIPT: DOM is ready. Attempting to create chart.");
+    
+        try {
+            const forecastCanvas = document.getElementById('forecast-range-chart');
+            if (!forecastCanvas) {
+                console.error("CRITICAL: Canvas with ID 'forecast-range-chart' was not found!");
+                return;
+            }
+    
+            // Hardcoded, guaranteed-to-be-valid data.
+            const staticTestData = {
+                temperature: { value: {{ day_data.temperature.value }} , lower: {{ day_data.temperature.lower }}, upper: {{ day_data.temperature.upper }} },
+                rainfall:    { value: {{ day_data.rainfall.value }} , lower: {{ day_data.rainfall.lower }}, upper: {{ day_data.rainfall.upper }}},
+                windspeed:   { value: {{ day_data.windspeed.value }} , lower: {{ day_data.windspeed.lower }}, upper: {{ day_data.windspeed.upper }}},
+                humidity:    { value: {{ day_data.humidity.value }} , lower: {{ day_data.humidity.lower }}, upper: {{ day_data.humidity.upper }} }
+            };
+            console.log("Using static test data:", staticTestData);
+    
+            // Chart Styling
+            const getCssVar = (variable) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+            Chart.defaults.color = getCssVar('--muted-text-color') || '#bdc3c7';
+            Chart.defaults.borderColor = getCssVar('--border-color') || '#444';
+    
+            // Initialize Chart
+            new Chart(forecastCanvas, {
+                type: 'bar',
+                data: {
+                    labels: ['Temperature (°C)', 'Rainfall (mm)', 'Wind Speed (m/s)', 'Humidity (%)'],
+                    datasets: [
+                        {
+                            label: 'Forecast Range',
+                            data: [
+                                [staticTestData.temperature.lower, staticTestData.temperature.upper],
+                                [staticTestData.rainfall.lower, staticTestData.rainfall.upper],
+                                [staticTestData.windspeed.lower, staticTestData.windspeed.upper],
+                                [staticTestData.humidity.lower, staticTestData.humidity.upper]
+                            ],
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            borderColor: getCssVar('--border-color') || '#444',
+                            borderWidth: 1,
+                            borderSkipped: false,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Predicted Value',
+                            data: [
+                                staticTestData.temperature.value,
+                                staticTestData.rainfall.value,
+                                staticTestData.windspeed.value,
+                                staticTestData.humidity.value
+                            ],
+                            backgroundColor: getCssVar('--primary-color') || '#3498db',
+                            barPercentage: 0.15,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: getCssVar('--border-color') || '#444' } },
+                        y: { grid: { display: false } }
+                    }
+                }
+            });
+    
+            console.log("SUCCESS: Static chart was initialized.");
+    
+        } catch (error) {
+            console.error("ERROR during static chart initialization:", error);
+        }
+    });
+    </script>
 {% endblock content %}

@@ -1,0 +1,56 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <main class="main-content">
+        <section class="hero">
+            <h1>Planning an outdoor event?</h1>
+            <p>Get personalized weather insights to avoid surprises. We tell you the likelihood of adverse conditions for your specific location and time.</p>
+            <a href="{% url "userside:map" %}" class="cta-button">Get Your Forecast</a>
+        </section>
+
+        <div class="container">
+            <section class="page-section" style="margin-bottom: 4rem;">
+                <div class="page-header">
+                    <h2>The NASA Space Apps Challenge</h2>
+                    <p>Our project addresses the challenge of making Earth observation data useful for personal planning, like vacations, hikes, or outdoor events.</p>
+                </div>
+            </section>
+
+            <section class="page-section" style="margin-bottom: 4rem;">
+                <div class="grid">
+                    <div class="card">
+                        <h3><i class="fas fa-question-circle"></i> The Problem</h3>
+                        <p>When planning an outdoor activity, it's hard to know the chances of adverse weather. Standard forecasts don't always tell you the likelihood of "very hot", "very cold", or "very wet" conditions for your specific needs.</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-lightbulb"></i> Our Solution</h3>
+                        <p>EventWeather provides a personalized interface to query NASA's Earth observation data. You specify the location and date, and our app provides the likelihood of various weather conditions, starting with precipitation.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page-section" style="margin-bottom: 4rem;">
+                <div class="page-header">
+                    <h2>Key Features</h2>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <h3><i class="fas fa-sliders-h"></i> Customized Forecast</h3>
+                        <p>Define your own thresholds for "very hot" or "very windy" and get a forecast tailored to your comfort.</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-map-marked-alt"></i> Global Coverage</h3>
+                        <p>Explore weather patterns and get forecasts for any location on the globe, thanks to NASA's satellite network.</p>
+                    </div>
+                    <div class="card">
+                        <h3><i class="fas fa-chart-pie"></i> Clear Probabilities</h3>
+                        <p>We don't just say "it might rain." We provide clear probabilities for different conditions to help you make informed decisions.</p>
+                    </div>
+                </div>
+            </section>
+{% endblock content %}

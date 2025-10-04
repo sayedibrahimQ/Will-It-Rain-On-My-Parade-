@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static  %}
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<main class="main-content">
+    <div class="container">
+        <div class="page-header">
+            <h1>About RainCast</h1>
+            <p>Transparency for the NASA Space Apps Challenge.</p>
+        </div>
+
+        <div class="card" style="margin-bottom: 2rem;">
+            <h3>Why Precipitation Matters</h3>
+            <p>Precipitation is a key factor in our daily lives, impacting everything from agriculture and water resource management to event planning and disaster preparedness. By providing accurate and accessible precipitation forecasts, we aim to help people make more informed decisions in the face of a changing climate.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>NASA Data</h3>
+                <p> The project was developed using Python with Pandas, Statsmodels, and Requests for data handling and modeling, and Django as the web framework.</p>
+                <p> All datasets were sourced directly from <strong> NASA POWER API </strong>, which provided daily weather variables (temperature, precipitation, wind speed, and humidity) spanning from the year 2000 to the present.</p>
+                <p> These datasets were aggregated monthly to feed the time series models.</p>
+                <p> No additional datasets were used beyond NASA’s resources, although open-source libraries such as Pandas, Statsmodels, and Django supported the development process.</p>
+            </div>
+
+            <div class="card">
+                <h3>Technology Stack</h3>
+                <ul>
+                    <li><strong>Frontend:</strong> HTML, CSS, JavaScript (Bootstrap)</li>
+                    <li><strong>Backend:</strong> Django (Python)</li>
+                    <li><strong>Time Series Analysis:</strong> Sarimax </li>
+                    <li><strong>Styling:</strong> Custom CSS with a modern, minimal design</li>
+                    <li><strong>Mapping:</strong> Leaflet.js</li>
+                    <li><strong>Charting:</strong> Chart.js</li>
+                    <li><strong>APIs:</strong> Nasa Power API</li>
+                    <li><strong>AI:</strong> Gemini AI</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+{% endblock content %}

@@ -56,7 +56,6 @@ def get_weather_analysis_json(weather_data: dict) -> dict:
         - Average Wind Speed: {weather_data.get('avg_wind_speed_kph', 'N/A')} km/h
         - Typical Dominant Condition: {weather_data.get('dominant_condition', 'N/A')}
         - Chance of 'Very Hot' (Heat Index Advisory): {weather_data.get('heat_index_advisory_chance_percent', 'N/A')}%
-        - Average UV Index: {weather_data.get('uv_index_avg', 'N/A')}
         """
 
         contents = [

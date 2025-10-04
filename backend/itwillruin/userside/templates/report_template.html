@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Event Weather Report</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            @frame header_frame {
+                -pdf-frame-content: header_content;
+                left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+            }
+            @frame content_frame {
+                left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 722pt; height: 20pt;
+            }
+        }
+        body {
+            font-family: "Helvetica", "Arial", sans-serif;
+            color: #333;
+            line-height: 1.5;
+        }
+        h1 {
+            font-size: 24pt;
+            color: #1a1a1a;
+            margin: 0;
+        }
+        h2 {
+            font-size: 18pt;
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            font-size: 14pt;
+            color: #2c2c2c;
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .summary-card {
+            background-color: #f9f9f9;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        #header_content { text-align: left; }
+        #footer_content { text-align: right; font-size: 10pt; color: #888; }
+    </style>
+</head>
+<body>
+    <div id="header_content">
+        <h1>Event Weather Report</h1>
+    </div>
+    <div id="footer_content">
+        Page <pdf:pagenumber /> of <pdf:pagecount /> | Generated on {{ generation_date }}
+    </div>
+
+    <!-- Main Content -->
+    <h2>Forecast for {{ location }} on {{ date }}</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Weather Metric</th>
+                <th>Predicted Value</th>
+                <th>Expected Range</th>
+                <th>Condition</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Temperature</td>
+                <td>{{ day_data.temperature.value }} °C</td>
+                <td>{{ day_data.temperature.lower }} - {{ day_data.temperature.upper }} °C</td>
+                <td>{{ day_data.temperature.condition }}</td>
+            </tr>
+            <tr>
+                <td>Rainfall</td>
+                <td>{{ day_data.rainfall.value }} mm</td>
+                <td>{{ day_data.rainfall.lower }} - {{ day_data.rainfall.upper }} mm</td>
+                <td>{{ day_data.rainfall.condition }}</td>
+            </tr>
+            <tr>
+                <td>Wind Speed</td>
+                <td>{{ day_data.windspeed.value }} m/s</td>
+                <td>{{ day_data.windspeed.lower }} - {{ day_data.windspeed.upper }} m/s</td>
+                <td>{{ day_data.windspeed.condition }}</td>
+            </tr>
+             <tr>
+                <td>Humidity</td>
+                <td>{{ day_data.humidity.value }} %</td>
+                <td>{{ day_data.humidity.lower }} - {{ day_data.humidity.upper }} %</td>
+                <td>{{ day_data.humidity.condition }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>AI-Powered Event Planner Insights</h2>
+    
+    <div class="summary-card">
+        <h3>AI Summary</h3>
+        <p>{{ ai_insights.summary }}</p>
+    </div>
+
+    <h3>Overall Outlook</h3>
+    <p>{{ ai_insights.parade_planner.overall_outlook }}</p>
+
+    <h3>Clothing Recommendation</h3>
+    <p>{{ ai_insights.parade_planner.clothing_recommendation }}</p>
+
+    <h3>Contingency Plan</h3>
+    <p>{{ ai_insights.parade_planner.contingency_plan }}</p>
+
+</body>
+</html>
