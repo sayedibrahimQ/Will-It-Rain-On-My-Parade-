@@ -1,56 +1,180 @@
-
-{% extends "base.html" %}
-{% load static %}
-
+{% extends 'base.html' %}
 {% block content %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<div class="animate-fadeIn space-y-16 md:space-y-24">
 
+    <!-- Hero Section -->
+    <section class="relative text-center py-20 md:py-28 overflow-hidden rounded-b-3xl shadow-2xl bg-gray-900">
+        <div id="stars-container" class="absolute inset-0"></div>
+        <div id="rain-container" class="absolute inset-0"></div>
+        <div id="lightning-flash" class="absolute inset-0 bg-white opacity-0"></div>
 
-    <main class="main-content">
-        <section class="hero">
-            <h1>Planning an outdoor event?</h1>
-            <p>Get personalized weather insights to avoid surprises. We tell you the likelihood of adverse conditions for your specific location and time.</p>
-            <a href="{% url "userside:map" %}" class="cta-button">Get Your Forecast</a>
-        </section>
+        <div class="relative z-10 max-w-4xl mx-auto px-4">
+            <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+                Planning an outdoor event?
+            </h1>
+            <p class="mt-6 max-w-3xl mx-auto text-lg leading-8 text-slate-300">
+                Get personalized weather insights to avoid surprises. We tell you the likelihood of adverse conditions for your specific location and time, powered by decades of NASA satellite data.
+            </p>
+            <div class="mt-10 flex items-center justify-center gap-x-6">
+                <a href="{% url 'userside:map' %}" class="rounded-lg bg-sky-500 px-6 py-3 text-base font-semibold text-white shadow-lg hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 transition-all duration-300 transform hover:scale-105">
+                    Get Your Forecast
+                </a>
+                <a href="{% url 'userside:about' %}" class="text-base font-semibold leading-6 text-slate-300 hover:text-white transition-colors">
+                    Learn more <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
 
-        <div class="container">
-            <section class="page-section" style="margin-bottom: 4rem;">
-                <div class="page-header">
-                    <h2>The NASA Space Apps Challenge</h2>
-                    <p>Our project addresses the challenge of making Earth observation data useful for personal planning, like vacations, hikes, or outdoor events.</p>
+    <!-- Problem & Solution Section -->
+    <section>
+        <div class="text-center">
+            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">From Challenge to Solution</h2>
+            <p class="mt-4 text-lg text-slate-400">Born from the NASA Space Apps Challenge to make Earth observation data useful for everyone.</p>
+        </div>
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- The Problem Card -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 flex items-start gap-4">
+                <div class="bg-red-500/10 p-3 rounded-xl flex-shrink-0"><i data-lucide="help-circle" class="h-6 w-6 text-red-400"></i></div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">The Problem</h3>
+                    <p class="mt-2 text-slate-400">Standard forecasts are short-term and don't quantify the historical risk of "very hot," "very cold," or "very wet" conditions for a specific day months in advance, making long-term planning a gamble.</p>
                 </div>
-            </section>
+            </div>
+            <!-- Our Solution Card -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 flex items-start gap-4">
+                <div class="bg-green-500/10 p-3 rounded-xl flex-shrink-0"><i data-lucide="lightbulb" class="h-6 w-6 text-green-400"></i></div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Our Solution</h3>
+                    <p class="mt-2 text-slate-400">Our app provides a personalized interface to query NASA's historical data. Pinpoint a location and date, and we provide the statistical likelihood of various weather conditions, starting with precipitation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <section class="page-section" style="margin-bottom: 4rem;">
-                <div class="grid">
-                    <div class="card">
-                        <h3><i class="fas fa-question-circle"></i> The Problem</h3>
-                        <p>When planning an outdoor activity, it's hard to know the chances of adverse weather. Standard forecasts don't always tell you the likelihood of "very hot", "very cold", or "very wet" conditions for your specific needs.</p>
-                    </div>
-                    <div class="card">
-                        <h3><i class="fas fa-lightbulb"></i> Our Solution</h3>
-                        <p>EventWeather provides a personalized interface to query NASA's Earth observation data. You specify the location and date, and our app provides the likelihood of various weather conditions, starting with precipitation.</p>
-                    </div>
-                </div>
-            </section>
+    <!-- Key Features Section -->
+    <section>
+        <div class="text-center">
+            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Key Features</h2>
+        </div>
+        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
+                <div class="bg-sky-500/10 p-4 rounded-xl mb-4"><i data-lucide="sliders-horizontal" class="h-8 w-8 text-sky-400"></i></div>
+                <h3 class="text-xl font-bold text-white">Customized Forecast</h3>
+                <p class="mt-2 text-slate-400 flex-grow">Define your own thresholds for "very hot" or "very windy" to get a forecast tailored to your specific needs and comfort levels.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
+                <div class="bg-sky-500/10 p-4 rounded-xl mb-4"><i data-lucide="globe" class="h-8 w-8 text-sky-400"></i></div>
+                <h3 class="text-xl font-bold text-white">Global Coverage</h3>
+                <p class="mt-2 text-slate-400 flex-grow">Explore weather patterns and get long-term forecasts for any location on the globe, thanks to NASA's extensive satellite network.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
+                <div class="bg-sky-500/10 p-4 rounded-xl mb-4"><i data-lucide="pie-chart" class="h-8 w-8 text-sky-400"></i></div>
+                <h3 class="text-xl font-bold text-white">Clear Probabilities</h3>
+                <p class="mt-2 text-slate-400 flex-grow">We don't just say "it might rain." We provide clear, data-driven probabilities for different conditions to help you make truly informed decisions.</p>
+            </div>
+        </div>
+    </section>
 
-            <section class="page-section" style="margin-bottom: 4rem;">
-                <div class="page-header">
-                    <h2>Key Features</h2>
-                </div>
-                <div class="grid">
-                    <div class="card">
-                        <h3><i class="fas fa-sliders-h"></i> Customized Forecast</h3>
-                        <p>Define your own thresholds for "very hot" or "very windy" and get a forecast tailored to your comfort.</p>
-                    </div>
-                    <div class="card">
-                        <h3><i class="fas fa-map-marked-alt"></i> Global Coverage</h3>
-                        <p>Explore weather patterns and get forecasts for any location on the globe, thanks to NASA's satellite network.</p>
-                    </div>
-                    <div class="card">
-                        <h3><i class="fas fa-chart-pie"></i> Clear Probabilities</h3>
-                        <p>We don't just say "it might rain." We provide clear probabilities for different conditions to help you make informed decisions.</p>
-                    </div>
-                </div>
-            </section>
-{% endblock content %}
+    <!-- A NASA Space Apps Challenge Solution Section -->
+    <section class="text-center bg-slate-800/50 border border-slate-800 p-8 sm:p-12 rounded-2xl">
+        <h2 class="text-2xl font-bold text-white">A NASA Space Apps Challenge Solution</h2>
+        <p class="mt-4 max-w-2xl mx-auto text-slate-400">This project was developed for the NASA Space Apps Challenge to bridge the gap between complex satellite data and public use. Our application is built directly on NASA's rich repository of Earth observation data, utilizing the <strong>POWER API</strong> and <strong>IMERG</strong> datasets to provide reliable, long-term weather probabilities for any location on Earth.</p>
+    </section>
+
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.6s ease-in-out forwards;
+    }
+
+    #stars-container .star {
+        position: absolute;
+        background-color: white;
+        border-radius: 50%;
+        animation: twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.8; }
+    }
+
+    #rain-container .raindrop {
+        position: absolute;
+        bottom: 100%;
+        width: 1px;
+        height: 60px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
+        animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(100vh);
+        }
+    }
+
+    #lightning-flash.flash {
+        animation: lightning-flash 0.3s ease-out;
+    }
+
+    @keyframes lightning-flash {
+        0% { opacity: 0; }
+        20% { opacity: 0.6; }
+        100% { opacity: 0; }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const starsContainer = document.getElementById('stars-container');
+        const rainContainer = document.getElementById('rain-container');
+        const lightningFlash = document.getElementById('lightning-flash');
+
+        if (starsContainer && rainContainer && lightningFlash) {
+            // Create stars
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                starsContainer.appendChild(star);
+            }
+
+            // Create raindrops
+            for (let i = 0; i < 100; i++) {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                raindrop.style.left = `${Math.random() * 100}%`;
+                raindrop.style.animationDuration = `${0.5 + Math.random() * 0.5}s`;
+                raindrop.style.animationDelay = `${Math.random() * 5}s`;
+                rainContainer.appendChild(raindrop);
+            }
+
+            // Trigger lightning
+            function triggerLightning() {
+                lightningFlash.classList.add('flash');
+                setTimeout(() => {
+                    lightningFlash.classList.remove('flash');
+                }, 300);
+                setTimeout(triggerLightning, 5000 + Math.random() * 10000);
+            }
+
+            setTimeout(triggerLightning, 3000);
+        }
+    });
+</script>
+{% endblock %}

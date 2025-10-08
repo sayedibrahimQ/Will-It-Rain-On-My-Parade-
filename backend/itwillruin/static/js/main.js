@@ -1,200 +1,147 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // --- Elements ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    let chartInstances = {};
+    let map = null;
+    let marker = null;
 
-    // --- General --- //
-    const currentPath = window.location.pathname.split("/").pop();
-    const navLinks = document.querySelectorAll('.nav-links a');
+    // --- Active Nav Link Logic ---
+    const currentPagePath = window.location.pathname;
+    const navLinks = document.querySelectorAll('#desktop-nav a, #mobile-menu a');
+
     navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPath) {
+        const linkPath = new URL(link.href).pathname;
+        if (linkPath === currentPagePath) {
             link.classList.add('active');
-        } else {
-            link.classList.remove('active');
         }
     });
 
-    // --- Prediction Page --- //
-    const forecastCanvas = document.getElementById('forecast-chart');
-    if (forecastCanvas) {
-        new Chart(forecastCanvas, {
-            type: 'line',
-            data: {
-                labels: ['Event -12h', 'Event -6h', 'Event', 'Event +6h', 'Event +12h', 'Event +18h', 'Event +24h'],
-                datasets: [{
-                    label: 'Precipitation (mm/hr)',
-                    data: [0.1, 0.2, 0.5, 1, 0.8, 0.4, 0.2], // Placeholder data
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
-                    tension: 0.3,
-                    fill: true,
-                    yAxisID: 'y-precipitation'
-                }, {
-                    label: 'Probability of Rain (%)',
-                    data: [10, 20, 60, 80, 70, 50, 30], // Placeholder data
-                    borderColor: '#e74c3c',
-                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
-                    tension: 0.3,
-                    fill: true,
-                    yAxisID: 'y-probability'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Time Relative to Event',
-                            color: '#ecf0f1'
-                        },
-                        ticks: {
-                            color: '#bdc3c7'
-                        },
-                        grid: {
-                            color: '#444'
-                        }
-                    },
-                    'y-precipitation': {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: {
-                            display: true,
-                            text: 'Precipitation (mm/hr)',
-                            color: '#ecf0f1'
-                        },
-                        ticks: {
-                            color: '#bdc3c7'
-                        },
-                        grid: {
-                            color: '#444'
-                        }
-                    },
-                    'y-probability': {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
-                            display: true,
-                            text: 'Probability of Rain (%)',
-                            color: '#ecf0f1'
-                        },
-                        ticks: {
-                            color: '#bdc3c7'
-                        },
-                        grid: {
-                            drawOnChartArea: false, // only draw grid for precipitation axis
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#ecf0f1'
-                        }
-                    }
-                }
-            }
+    // --- Mobile Menu Toggle ---
+    if (mobileMenuButton) {
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuButton.querySelector('[data-lucide="menu"]').classList.toggle('hidden');
+            mobileMenuButton.querySelector('[data-lucide="x"]').classList.toggle('hidden');
         });
+    }
+    
+    // --- Icon Rendering ---
+    lucide.createIcons();
+    
+    // --- Page-specific Initializers ---
+    if (document.getElementById('temperature-chart')) {
+        initializeDashboardCharts();
+    }
+    if (document.getElementById('map')) {
+        initializePredictionForm();
+    }
 
-        const printBtn = document.getElementById('print-btn');
-        if(printBtn) {
-            printBtn.addEventListener('click', () => window.print());
-        }
-
-        const shareBtn = document.getElementById('share-btn');
-        if(shareBtn) {
-            shareBtn.addEventListener('click', () => {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'EventWeather Forecast',
-                        text: 'Check out this weather forecast for my event!',
-                        url: window.location.href
-                    }).catch(console.error);
-                } else {
-                    navigator.clipboard.writeText(window.location.href).then(() => {
-                        alert('Link copied to clipboard!');
-                    });
-                }
+    // --- Charting Logic ---
+    function initializeDashboardCharts() {
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#94a3b8' } } },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#94a3b8' } },
+                x: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#94a3b8' } }
+            }
+        };
+        
+        const tempCtx = document.getElementById('temperature-chart');
+        if (tempCtx && !chartInstances.temp) {
+            chartInstances.temp = new Chart(tempCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Temperature (°C)',
+                        data: [10, 12, 15, 18, 22, 25, 28],
+                        borderColor: '#38bdf8',
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        tension: 0.3, fill: true, pointBackgroundColor: '#38bdf8', pointBorderColor: '#0f172a'
+                    }]
+                },
+                options: chartOptions
             });
         }
 
-        const scrollToTopBtn = document.getElementById('scroll-to-top');
-        if(scrollToTopBtn) {
-            window.addEventListener('scroll', () => {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    scrollToTopBtn.style.display = 'block';
-                } else {
-                    scrollToTopBtn.style.display = 'none';
-                }
-            });
-
-            scrollToTopBtn.addEventListener('click', () => {
-                document.body.scrollTop = 0; // For Safari
-                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        const precipCtx = document.getElementById('precipitation-chart');
+        if (precipCtx && !chartInstances.precip) {
+            chartInstances.precip = new Chart(precipCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [{
+                        label: 'Precipitation (mm)',
+                        data: [50, 40, 60, 20, 10, 5, 2],
+                        backgroundColor: 'rgba(56, 189, 248, 0.6)',
+                        borderColor: '#38bdf8', borderWidth: 1
+                    }]
+                },
+                options: chartOptions
             });
         }
     }
 
-    // --- Interactive Map Page --- //
-    if (document.getElementById('event-form')) {
-        const map = L.map('map').setView([30.033333, 31.233334], 10);
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    // --- Prediction Form and Map Logic ---
+    function initializePredictionForm() {
+        const form = document.getElementById('prediction-form');
+        const latitudeInput = document.getElementById('latitude');
+        const longitudeInput = document.getElementById('longitude');
+        const coordsDisplay = document.getElementById('coords-display');
+        
+        const initialLatLng = [30.0444, 31.2357]; // Default to Cairo
+
+        // Initialize Map
+        map = L.map('map').setView(initialLatLng, 6);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
-            maxZoom: 19
+            maxZoom: 20
         }).addTo(map);
 
-        let marker;
-        map.getContainer().style.cursor = 'crosshair';
+        // Initialize Marker
+        marker = L.marker(initialLatLng, { draggable: true }).addTo(map)
+            .bindPopup('Your event location').openPopup();
 
-        const latInput = document.getElementById('latitude');
-        const lonInput = document.getElementById('longitude');
+        function updateCoordinates(lat, lng) {
+            latitudeInput.value = lat.toFixed(4);
+            longitudeInput.value = lng.toFixed(4);
+            coordsDisplay.textContent = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
+        }
 
+        updateCoordinates(initialLatLng[0], initialLatLng[1]);
+        
+        // Map Event Listeners
         map.on('click', function(e) {
-            if (marker) {
-                map.removeLayer(marker);
-            }
-            marker = L.marker(e.latlng).addTo(map);
-            latInput.value = e.latlng.lat.toFixed(5);
-            lonInput.value = e.latlng.lng.toFixed(5);
+            marker.setLatLng(e.latlng);
+            updateCoordinates(e.latlng.lat, e.latlng.lng);
+        });
+        
+        marker.on('dragend', function(e) {
+            const latLng = e.target.getLatLng();
+            updateCoordinates(latLng.lat, latLng.lng);
+        });
+
+        // Form submission logic
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const results = document.getElementById('prediction-results');
+            results.classList.remove('hidden');
+
+            document.getElementById('rain-chance').innerText = '78% 🌧️';
+            document.getElementById('temperature').innerText = '27°C';
+            document.getElementById('wind-speed').innerText = '5.4 m/s';
+            document.getElementById('ai-summary').innerText = 'It’s likely to be warm and humid with a high chance of rain in the afternoon.';
+            document.getElementById('ai-outlook').innerText = 'Risky';
+            document.getElementById('ai-clothing').innerText = 'Light, waterproof jacket and comfortable shoes.';
+            document.getElementById('ai-contingency').innerText = 'Have a backup indoor location or tents available.';
+            document.getElementById('ai-fun-fact').innerText = 'NASA\'s Earth-observing satellites help us understand our planet\'s climate and weather patterns.';
+            
+            lucide.createIcons({ nodes: [results] });
         });
     }
-
-    // --- Data Insights Page --- //
-    if (document.getElementById('rainfall-chart')) {
-        new Chart(document.getElementById('rainfall-chart'), {
-            type: 'bar',
-            data: {
-                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
-                datasets: [{
-                    label: 'Rainfall (mm)',
-                    data: [10, 20, 5, 15, 10, 25, 8], // Placeholder
-                    backgroundColor: 'rgba(52, 152, 219, 0.7)'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-    }
-
-    if (document.getElementById('region-chart')) {
-        new Chart(document.getElementById('region-chart'), {
-            type: 'pie',
-            data: {
-                labels: ['Americas', 'Europe', 'Africa', 'Asia', 'Oceania'],
-                datasets: [{
-                    data: [30, 15, 25, 20, 10], // Placeholder
-                    backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false
-            }
-        });
-    }
-    // 2222222222222222222222222222222222222222222222222222222222222222
-
 });

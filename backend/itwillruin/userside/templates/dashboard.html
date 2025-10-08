@@ -1,192 +1,254 @@
-{% extends "base.html" %}
-{% load static %}
-
+{% extends 'base.html' %}
 {% block content %}
+<div class="dashboard-wrapper">
+    <div class="animate-fadeIn">
 
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+        <!-- Header -->
+        <div class="animated-section flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white">Event Day Dashboard</h1>
+                <p class="text-slate-400 mt-1">Planning for <span class="text-sky-400 font-semibold">{{ date }}</span> in <span class="text-sky-400 font-semibold">{{ city }}</span></p>
+            </div>
+        </div>
 
-<main class="main-content">
-    <div class="container">
-        <!-- Page Header -->
-        <section class="page-header">
-            <h1>Event Weather Dashboard for {{ location }}</h1>
-            <p class="subtitle">Analysis based on forecast data for {{ date }}</p>
-        </section>
-
-        <!-- Main Dashboard Grid -->
-        <div class="dashboard-grid">
-
-            <!-- Stat Cards -->
-            <div class="stat-card status-{{ day_data.temperature.status }}">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5" /><path d="M10 9l4 0" /></svg>
-                </div>
-                <div class="stat-content">
-                    <h4>Temperature</h4>
-                    <p>{{ day_data.temperature.value|floatformat:1 }}°C</p>
-                    <span>{{ day_data.temperature.condition }}</span>
+        <!-- Main Weather Overview -->
+        <div class="animated-section bg-gradient-to-br from-sky-800/50 to-indigo-900/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-sky-700/50 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+            <div class="flex items-center gap-4">
+                {% if 'Cloud' in data.main_overview.condition %}
+                    <i data-lucide="cloud-sun" class="h-16 w-16 text-yellow-300 pulse-animation"></i>
+                {% elif 'Rain' in data.main_overview.condition %}
+                    <i data-lucide="cloud-rain" class="h-16 w-16 text-blue-300"></i>
+                {% else %}
+                    <i data-lucide="sun" class="h-16 w-16 text-yellow-400 pulse-animation"></i>
+                {% endif %}
+                <div>
+                    <p class="text-5xl font-bold text-white">{{ data.main_overview.current_temp }}°C</p>
+                    <p class="text-slate-300">{{ data.main_overview.condition }}</p>
                 </div>
             </div>
+            <div class="text-center sm:text-right">
+                <p class="text-lg font-semibold text-white">High: {{ data.main_overview.high_temp }}°C / Low: {{ data.main_overview.low_temp }}°C</p>
+                <p class="text-slate-300">Feels like: {{ data.main_overview.feels_like }}°C</p>
+                <p class="text-slate-300 mt-1">Chance of rain: <span class="font-semibold">{{ data.main_overview.rain_chance }}%</span></p>
+            </div>
+        </div>
 
-            <div class="stat-card status-{{ day_data.rainfall.status }}">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" /><path d="M9 15h1a1 1 0 0 1 1 1v1a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-1a1 1 0 0 1 1 -1z" /></svg>
-                </div>
-                <div class="stat-content">
-                    <h4>Rainfall</h4>
-                    <p>{{ day_data.rainfall.value|floatformat:2 }} mm</p>
-                    <span>{{ day_data.rainfall.condition }}</span>
-                </div>
+        <!-- Hourly Forecast -->
+        <div class="animated-section mb-8">
+            <h2 class="text-2xl font-bold text-white mb-4">Hourly Forecast</h2>
+            <div class="card-base">
+                <canvas id="hourly-forecast-chart"></canvas>
             </div>
-            
-            <div class="stat-card status-{{ day_data.windspeed.status }}">
-                <div class="stat-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 8h8.5a2.5 2.5 0 1 0 -2.34 -3.24" /><path d="M3 12h15.5a2.5 2.5 0 1 1 -2.34 3.24" /><path d="M4 16h5.5a2.5 2.5 0 1 1 -2.34 3.24" /></svg>
-                </div>
-                <div class="stat-content">
-                    <h4>Wind Speed</h4>
-                    <p>{{ day_data.windspeed.value|floatformat:1 }} m/s</p>
-                    <span>{{ day_data.windspeed.condition }}</span>
-                </div>
-            </div>
+        </div>
 
-            <div class="stat-card status-{{ day_data.humidity.status }}">
-                <div class="stat-icon">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6.8 15.3l-2.3 -2.3a5 5 0 0 1 7.1 -7.1l7.1 7.1a5 5 0 0 1 -7.1 7.1l-2.3 -2.3" /><path d="M12 20l-3.5 -3.5" /><path d="M16 16l-3.5 -3.5" /><path d="M8 12l-3.5 -3.5" /></svg>
+        <!-- Detailed Metrics -->
+        <div class="animated-section mb-8">
+            <h2 class="text-2xl font-bold text-white mb-4">Detailed Metrics</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div class="card-base text-center">
+                    <i data-lucide="umbrella" class="h-8 w-8 text-blue-400 mx-auto mb-2"></i>
+                    <p class="text-slate-400 text-sm">Precipitation</p>
+                    <p class="text-white text-xl font-bold">{{ data.detailed_metrics.precipitation_mm }} mm</p>
                 </div>
-                <div class="stat-content">
-                    <h4>Humidity</h4>
-                    <p>{{ day_data.humidity.value|floatformat:0 }}%</p>
-                    <span>{{ day_data.humidity.condition }}</span>
+                <div class="card-base text-center">
+                    <i data-lucide="droplets" class="h-8 w-8 text-green-400 mx-auto mb-2"></i>
+                    <p class="text-slate-400 text-sm">Humidity</p>
+                    <p class="text-white text-xl font-bold">{{ data.detailed_metrics.humidity_percent }}%</p>
                 </div>
-            </div>
-            
-            <!-- AI Insights Widget -->
-            <div class="widget ai-widget">
-                <h3><span class="icon">✨</span> AI Event Planner</h3>
-                <p>{{ ai_insights.summary }}</p>
-                <h4> Overall Outlook</h4>
-                <p>{{ ai_insights.parade_planner.overall_outlook }}</p>
-                <h4> Clothing Recommendation</h4>
-                <p>{{ ai_insights.parade_planner.clothing_recommendation }}</p>
-                <h4> Contingency Plan</h4>
-                <p>{{ ai_insights.parade_planner.contingency_plan }}</p>
-                <h4> Nasa Fun Fact</h4>
-                <p class="fun-fact">{{ ai_insights.nasa_fun_fact }}</p>
-            </div>
-
-            <!-- Forecast Range Chart -->
-            <div class="widget chart-widget">
-                <h3>Expected Weather Ranges</h3>
-                <div class="chart-wrapper">
-                    <canvas id="forecast-range-chart"></canvas>
+                <div class="card-base text-center">
+                    <i data-lucide="wind" class="h-8 w-8 text-yellow-400 mx-auto mb-2"></i>
+                    <p class="text-slate-400 text-sm">Wind Speed</p>
+                    <p class="text-white text-xl font-bold">{{ data.detailed_metrics.wind_speed_kmh }} km/h</p>
                 </div>
-            </div>
-
-            <!-- NEW: Future Outlook Cards -->
-            <div class="widget large-widget">
-                <h3>Future Outlook (Next 5 Months)</h3>
-                <p class="subtitle" style="margin-top: -1.2rem; margin-bottom: 1.5rem; color: var(--muted-text-color);">Useful for long-term planning or rescheduling.</p>
-                <div id="outlook-cards-container" class="outlook-cards-container">
-                    <!-- Mini cards will be generated by JavaScript here -->
+                <div class="card-base text-center">
+                    <i data-lucide="sun" class="h-8 w-8 text-orange-400 mx-auto mb-2"></i>
+                    <p class="text-slate-400 text-sm">UV Index</p>
+                    <p class="text-white text-xl font-bold">{{ data.detailed_metrics.uv_index }} ({{ data.detailed_metrics.uv_index_text }})</p>
                 </div>
-            </div>
-
-            <!-- Actions Widget -->
-            <div class="widget actions-widget">
-                <h3>Export Data</h3>
-                <p>Download the full report in your preferred format.</p>
-                <div class="action-buttons">
-                    <button class="btn btn-secondary">Download PDF Report</button>
-                    <button class="btn btn-primary">Download JSON</button>
+                <div class="card-base text-center">
+                    <i data-lucide="eye" class="h-8 w-8 text-purple-400 mx-auto mb-2"></i>
+                    <p class="text-slate-400 text-sm">Visibility</p>
+                    <p class="text-white text-xl font-bold">{{ data.detailed_metrics.visibility_km }} km</p>
                 </div>
             </div>
         </div>
+
+        <!-- Plan Your Day -->
+        <div class="animated-section mb-8">
+            <h2 class="text-2xl font-bold text-white mb-4">Plan Your Day</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="card-base">
+                    <h3 class="font-bold text-white text-lg mb-3 flex items-center gap-2"><i data-lucide="shirt" class="h-5 w-5 text-sky-400"></i> What to Wear</h3>
+                    <div class="flex items-center justify-around text-center">
+                        {% for item in data.plan_your_day.what_to_wear %}
+                        <div><i data-lucide="{{ item.icon }}" class="h-10 w-10 {{ item.color }} mx-auto"></i><p class="text-sm mt-1">{{ item.name }}</p></div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-base">
+                    <h3 class="font-bold text-white text-lg mb-3 flex items-center gap-2"><i data-lucide="calendar-check" class="h-5 w-5 text-sky-400"></i> Activity Planner</h3>
+                    <ul class="space-y-2 text-slate-300">
+                        {% for activity in data.plan_your_day.activity_planner %}
+                        <li class="flex items-start gap-2"><i data-lucide="{{ activity.icon }}" class="h-5 w-5 {{ activity.color }} flex-shrink-0 mt-1"></i><span><span class="font-semibold">{{ activity.time_period }}:</span> {{ activity.advice }}</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historical Comparison -->
+        <div class="animated-section">
+            <h2 class="text-2xl font-bold text-white mb-4">Historical Context</h2>
+            <div class="card-base">
+                <canvas id="historical-chart"></canvas>
+            </div>
+        </div>
     </div>
-</main>
+</div>
 
-<!-- Load Chart.js Library -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+{{ hourly_chart_data|json_script:"hourly-chart-data" }}
+{{ historical_chart_data|json_script:"historical-chart-data" }}
 
-<!-- =================================================================== -->
-<!--                  LOCAL SCRIPT FOR DASHBOARD CHARTS                  -->
-<!-- =================================================================== -->
+<style>
+    .dashboard-wrapper {
+        background: linear-gradient(-45deg, #1e293b, #0f172a, #1e293b, #334155);
+        background-size: 400% 400%;
+        animation: gradientBG 20s ease infinite;
+        padding: 1.5rem; /* p-6 */
+        margin: -1.5rem; /* cancel out parent padding if any */
+    }
 
-<!-- LOCAL SCRIPT WITH STATIC DATA -->
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .card-base {
+        background-color: rgba(30, 41, 59, 0.3); /* bg-slate-800/30 */
+        backdrop-filter: blur(4px);
+        border: 1px solid rgb(51 65 85); /* border-slate-700 */
+        border-radius: 1rem; /* rounded-2xl */
+        padding: 1.5rem; /* p-6 */
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card-base:hover {
+        background-color: rgba(51, 65, 85, 0.5); /* hover:bg-slate-700/50 */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: translateY(-4px);
+    }
+
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animated-section {
+        animation: slideInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+
+    .pulse-animation {
+        animation: pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(252, 211, 77, 0.4); }
+        50% { transform: scale(1.1); box-shadow: 0 0 10px 10px rgba(252, 211, 77, 0); }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log("STATIC SCRIPT: DOM is ready. Attempting to create chart.");
-    
-        try {
-            const forecastCanvas = document.getElementById('forecast-range-chart');
-            if (!forecastCanvas) {
-                console.error("CRITICAL: Canvas with ID 'forecast-range-chart' was not found!");
-                return;
-            }
-    
-            // Hardcoded, guaranteed-to-be-valid data.
-            const staticTestData = {
-                temperature: { value: {{ day_data.temperature.value }} , lower: {{ day_data.temperature.lower }}, upper: {{ day_data.temperature.upper }} },
-                rainfall:    { value: {{ day_data.rainfall.value }} , lower: {{ day_data.rainfall.lower }}, upper: {{ day_data.rainfall.upper }}},
-                windspeed:   { value: {{ day_data.windspeed.value }} , lower: {{ day_data.windspeed.lower }}, upper: {{ day_data.windspeed.upper }}},
-                humidity:    { value: {{ day_data.humidity.value }} , lower: {{ day_data.humidity.lower }}, upper: {{ day_data.humidity.upper }} }
-            };
-            console.log("Using static test data:", staticTestData);
-    
-            // Chart Styling
-            const getCssVar = (variable) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
-            Chart.defaults.color = getCssVar('--muted-text-color') || '#bdc3c7';
-            Chart.defaults.borderColor = getCssVar('--border-color') || '#444';
-    
-            // Initialize Chart
-            new Chart(forecastCanvas, {
-                type: 'bar',
-                data: {
-                    labels: ['Temperature (°C)', 'Rainfall (mm)', 'Wind Speed (m/s)', 'Humidity (%)'],
-                    datasets: [
-                        {
-                            label: 'Forecast Range',
-                            data: [
-                                [staticTestData.temperature.lower, staticTestData.temperature.upper],
-                                [staticTestData.rainfall.lower, staticTestData.rainfall.upper],
-                                [staticTestData.windspeed.lower, staticTestData.windspeed.upper],
-                                [staticTestData.humidity.lower, staticTestData.humidity.upper]
-                            ],
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            borderColor: getCssVar('--border-color') || '#444',
-                            borderWidth: 1,
-                            borderSkipped: false,
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Predicted Value',
-                            data: [
-                                staticTestData.temperature.value,
-                                staticTestData.rainfall.value,
-                                staticTestData.windspeed.value,
-                                staticTestData.humidity.value
-                            ],
-                            backgroundColor: getCssVar('--primary-color') || '#3498db',
-                            barPercentage: 0.15,
-                            borderRadius: 4
-                        }
-                    ]
+document.addEventListener('DOMContentLoaded', () => {
+    const chartTextColor = '#94a3b8'; // text-slate-400
+    const chartGridColor = 'rgba(148, 163, 184, 0.1)';
+
+    // Staggered animations
+    const sections = document.querySelectorAll('.animated-section');
+    sections.forEach((section, index) => {
+        section.style.animationDelay = `${index * 0.15}s`;
+    });
+
+    // Parse data from template
+    const hourlyData = JSON.parse(document.getElementById('hourly-chart-data').textContent);
+    const historicalData = JSON.parse(document.getElementById('historical-chart-data').textContent);
+
+    // Hourly Forecast Chart
+    const hourlyCtx = document.getElementById('hourly-forecast-chart');
+    if (hourlyCtx && hourlyData.labels) {
+        new Chart(hourlyCtx, {
+            type: 'bar',
+            data: hourlyData, // Use the data object directly from the backend
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                height: 300,
+                scales: {
+                    x: {
+                        ticks: { color: chartTextColor },
+                        grid: { color: chartGridColor }
+                    },
+                    y: {
+                        position: 'left',
+                        ticks: { color: chartTextColor },
+                        grid: { color: chartGridColor },
+                        title: { display: true, text: 'Temperature (°C)', color: chartTextColor }
+                    },
+                    y1: {
+                        position: 'right',
+                        min: 0,
+                        max: 100,
+                        ticks: { color: chartTextColor, callback: value => value + '%' },
+                        grid: { drawOnChartArea: false },
+                        title: { display: true, text: 'Rain Chance', color: chartTextColor }
+                    }
                 },
-                options: {
-                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { beginAtZero: true, grid: { color: getCssVar('--border-color') || '#444' } },
-                        y: { grid: { display: false } }
+                plugins: {
+                    legend: { labels: { color: chartTextColor } }
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+            }
+        });
+    }
+
+    // Historical Chart
+    const historicalCtx = document.getElementById('historical-chart');
+    if (historicalCtx && historicalData.labels) {
+        new Chart(historicalCtx, {
+            type: 'bar',
+            data: historicalData, // Use the data object directly from the backend
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                height: 300,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: chartTextColor },
+                        grid: { color: chartGridColor }
+                    },
+                    x: {
+                        ticks: { color: chartTextColor },
+                        grid: { color: chartGridColor }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: chartTextColor } },
+                    title: {
+                        display: true,
+                        text: `Temperature vs. Historical Average for ${historicalData.date}`,
+                        color: 'white',
+                        font: { size: 16 }
                     }
                 }
-            });
-    
-            console.log("SUCCESS: Static chart was initialized.");
-    
-        } catch (error) {
-            console.error("ERROR during static chart initialization:", error);
-        }
-    });
-    </script>
-{% endblock content %}
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

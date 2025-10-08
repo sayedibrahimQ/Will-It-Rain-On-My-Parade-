@@ -1,51 +1,93 @@
-{% extends "base.html" %}
-{% load static  %}
+{% extends 'base.html' %}
 {% block content %}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<div class="max-w-5xl mx-auto animate-fadeIn">
 
-<main class="main-content">
-    <div class="container">
-        <div class="page-header">
-            <h1>About RainCast</h1>
-            <p>Transparency for the NASA Space Apps Challenge.</p>
-        </div>
-
-        <div class="card" style="margin-bottom: 2rem;">
-            <h3>Why Precipitation Matters</h3>
-            <p>Precipitation is a key factor in our daily lives, impacting everything from agriculture and water resource management to event planning and disaster preparedness. By providing accurate and accessible precipitation forecasts, we aim to help people make more informed decisions in the face of a changing climate.</p>
-        </div>
-
-        <div class="grid">
-            <div class="card">
-                <h3>NASA Data</h3>
-                <p> The project was developed using Python with Pandas, Statsmodels, and Requests for data handling and modeling, and Django as the web framework.</p>
-                <p> All datasets were sourced directly from <strong> NASA POWER API </strong>, which provided daily weather variables (temperature, precipitation, wind speed, and humidity) spanning from the year 2000 to the present.</p>
-                <p> These datasets were aggregated monthly to feed the time series models.</p>
-                <p> No additional datasets were used beyond NASA’s resources, although open-source libraries such as Pandas, Statsmodels, and Django supported the development process.</p>
-            </div>
-
-            <div class="card">
-                <h3>Technology Stack</h3>
-                <ul>
-                    <li><strong>Frontend:</strong> HTML, CSS, JavaScript (Bootstrap)</li>
-                    <li><strong>Backend:</strong> Django (Python)</li>
-                    <li><strong>Time Series Analysis:</strong> Sarimax </li>
-                    <li><strong>Styling:</strong> Custom CSS with a modern, minimal design</li>
-                    <li><strong>Mapping:</strong> Leaflet.js</li>
-                    <li><strong>Charting:</strong> Chart.js</li>
-                    <li><strong>APIs:</strong> Nasa Power API</li>
-                    <li><strong>AI:</strong> Gemini AI</li>
-                </ul>
-            </div>
-        </div>
-
+    <!-- Hero Section -->
+    <div class="text-center py-12 md:py-16">
+        <span class="text-sky-400 font-semibold uppercase tracking-wider">Our Mission</span>
+        <h1 class="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">Bridging Space Data and Your Daily Plans</h1>
+        <p class="mt-6 max-w-3xl mx-auto text-lg leading-8 text-slate-300">We believe the vast knowledge gathered by NASA's Earth observation satellites shouldn't be confined to scientific papers. Our mission is to translate this complex, vital data into simple, actionable insights for your everyday life, helping you plan your most important events with confidence.</p>
     </div>
-</main>
 
-{% endblock content %}
+    <!-- Technology Section -->
+    <div class="py-12 md:py-16 border-t border-slate-800">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">The Technology Behind the Forecast</h2>
+            <p class="mt-4 text-lg text-slate-400">We use a powerful combination of trusted data sources and cutting-edge AI.</p>
+        </div>
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- NASA Card -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
+                <div class="bg-sky-500/10 p-4 rounded-xl mb-4"><i data-lucide="satellite" class="h-8 w-8 text-sky-400"></i></div>
+                <h3 class="text-xl font-bold text-white">NASA POWER API</h3>
+                <p class="mt-2 text-slate-400 flex-grow">The foundation of our predictions. We tap into decades of global meteorological data from NASA's Prediction of Worldwide Energy Resources project for scientifically-backed weather insights.</p>
+            </div>
+            <!-- Gemini Card -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
+                <div class="bg-sky-500/10 p-4 rounded-xl mb-4"><i data-lucide="brain-circuit" class="h-8 w-8 text-sky-400"></i></div>
+                <h3 class="text-xl font-bold text-white">Gemini AI</h3>
+                <p class="mt-2 text-slate-400 flex-grow">Data is only useful when you can understand it. We use Google's Gemini AI to analyze the weather data and generate human-friendly advice, contingency plans, and even fun facts.</p>
+            </div>
+            <!-- Web Stack Card -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800 text-center flex flex-col items-center">
+                <div class="bg-sky-500/10 p-4 rounded-xl mb-4"><i data-lucide="code" class="h-8 w-8 text-sky-400"></i></div>
+                <h3 class="text-xl font-bold text-white">Modern Web Stack</h3>
+                <p class="mt-2 text-slate-400 flex-grow">Built with a robust Django backend and an interactive frontend using Leaflet for mapping, ensuring a scalable, reliable, and user-friendly experience across all devices.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="py-12 md:py-16 border-t border-slate-800">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">Meet the Team</h2>
+            <p class="mt-4 text-lg text-slate-400">A passionate group of developers, designers, and data scientists.</p>
+        </div>
+        <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+            <!-- Team Member 1 -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800">
+                <img class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-slate-700" src="https://placehold.co/128x128/0f172a/94a3b8?text=AC" alt="Alex Chen">
+                <h3 class="text-xl font-bold text-white">Alex "Orbit" Chen</h3>
+                <p class="text-sm font-medium text-sky-400">Lead Developer</p>
+                <p class="mt-2 text-slate-400 text-sm">A space enthusiast at heart, Alex architected the application, ensuring that data flows seamlessly from NASA's satellites to your screen.</p>
+            </div>
+            <!-- Team Member 2 -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800">
+                <img class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-slate-700" src="https://placehold.co/128x128/0f172a/94a3b8?text=BR" alt="Bella Rodriguez">
+                <h3 class="text-xl font-bold text-white">Bella "Stratus" Rodriguez</h3>
+                <p class="text-sm font-medium text-sky-400">UI/UX Designer</p>
+                <p class="mt-2 text-slate-400 text-sm">Bella is the creative force behind the interface, dedicated to making complex data beautiful, intuitive, and a pleasure to interact with.</p>
+            </div>
+            <!-- Team Member 3 -->
+            <div class="bg-slate-800/50 p-8 rounded-2xl border border-slate-800">
+                <img class="w-24 h-24 rounded-full mx-auto mb-4 ring-2 ring-slate-700" src="https://placehold.co/128x128/0f172a/94a3b8?text=KT" alt="Kenji Tanaka">
+                <h3 class="text-xl font-bold text-white">Kenji "Cosmo" Tanaka</h3>
+                <p class="text-sm font-medium text-sky-400">Data Scientist</p>
+                <p class="mt-2 text-slate-400 text-sm">Kenji translates raw meteorological numbers into meaningful predictions and works with our AI to uncover hidden patterns in the weather.</p>
+            </div>
+        </div>
+    </div>
+
+     <!-- Credits -->
+     <div class="text-center mt-12 py-8 border-t border-slate-800">
+        <h2 class="text-xl font-semibold text-white">Credits & Acknowledgements</h2>
+        <p class="text-slate-400 mt-2">This project is made possible by the amazing resources provided by:</p>
+        <div class="flex justify-center items-center gap-6 mt-4">
+            <a href="https://www.nasa.gov/" target="_blank" class="text-sky-400 hover:text-sky-300 transition-colors">NASA</a>
+            <a href="https://www.spaceappschallenge.org/" target="_blank" class="text-sky-400 hover:text-sky-300 transition-colors">NASA Space Apps</a>
+            <a href="https://github.com/" target="_blank" class="text-sky-400 hover:text-sky-300 transition-colors">GitHub</a>
+        </div>
+     </div>
+</div>
+
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.6s ease-in-out forwards;
+    }
+</style>
+{% endblock %}
+

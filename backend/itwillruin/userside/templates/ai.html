@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-wrapper">
+    <div class="animate-fadeIn">
+
+        <!-- Header -->
+        <div class="animated-section text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white">AI-Powered Weather Intelligence</h1>
+            <p class="text-slate-400 mt-2 max-w-2xl mx-auto">Unlock deeper insights into long-term weather patterns and risks for any location on Earth.</p>
+        </div>
+
+        <!-- Perfect Day Finder -->
+        <div class="animated-section mb-12">
+            <div class="card-base p-8">
+                <h2 class="text-2xl font-bold text-white mb-4 text-center">Perfect Day Finder</h2>
+                <p class="text-slate-400 mb-6 text-center max-w-xl mx-auto">Tell us your ideal conditions, and our AI will scan the next 3 months to find the dates with the highest probability of matching your criteria.</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Temperature</label>
+                        <select class="form-select w-full bg-slate-700/50 border-slate-600 rounded-md text-slate-300">
+                            <option>Mild (18-22°C)</option>
+                            <option>Warm (23-28°C)</option>
+                            <option>Cool (12-17°C)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Wind</label>
+                        <select class="form-select w-full bg-slate-700/50 border-slate-600 rounded-md text-slate-300">
+                            <option>Calm (< 10 km/h)</option>
+                            <option>Breezy (10-20 km/h)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Conditions</label>
+                        <select class="form-select w-full bg-slate-700/50 border-slate-600 rounded-md text-slate-300">
+                            <option>Mostly Sunny</option>
+                            <option>Partly Cloudy</option>
+                            <option>Any</option>
+                        </select>
+                    </div>
+                    <button class="btn bg-sky-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-sky-600 transition-colors h-10">Find My Perfect Days</button>
+                </div>
+                <div class="text-center bg-slate-900/50 p-4 rounded-lg">
+                    <p class="text-white"><span class="font-bold">Top Match:</span> November 15, 2025 <span class="text-green-400">(92% Match Probability)</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Climate Shift Visualization -->
+        <div class="animated-section mb-12">
+            <h2 class="text-2xl font-bold text-white mb-4">Climate Shift: San Francisco (Oct 26)</h2>
+            <div class="card-base">
+                <canvas id="climate-shift-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Extreme Weather Risk -->
+        <div class="animated-section mb-12">
+            <h2 class="text-2xl font-bold text-white mb-4">Extreme Weather Risk Assessment (Next 30 Days)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card-base text-center p-8 border-red-500/50">
+                    <h3 class="text-xl font-bold text-red-400">Heatwave</h3>
+                    <p class="text-6xl font-extrabold text-white my-2">5%</p>
+                    <p class="text-slate-400">Probability of 3+ consecutive days > 30°C.</p>
+                </div>
+                <div class="card-base text-center p-8 border-blue-500/50">
+                    <h3 class="text-xl font-bold text-blue-400">Major Rainfall</h3>
+                    <p class="text-6xl font-extrabold text-white my-2">8%</p>
+                    <p class="text-slate-400">Probability of a >50mm rainfall event.</p>
+                </div>
+                <div class="card-base text-center p-8 border-purple-500/50">
+                    <h3 class="text-xl font-bold text-purple-400">High Winds</h3>
+                    <p class="text-6xl font-extrabold text-white my-2">12%</p>
+                    <p class="text-slate-400">Probability of wind speeds exceeding 60 km/h.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Industry Advisory -->
+        <div class="animated-section">
+            <h2 class="text-2xl font-bold text-white mb-4">Industry-Specific Advisory</h2>
+            <div class="card-base p-0">
+                <div class="flex border-b border-slate-700">
+                    <button class="tab-btn active">Event Planners</button>
+                    <button class="tab-btn">Agriculture</button>
+                    <button class="tab-btn">Construction</button>
+                </div>
+                <div class="p-6">
+                    <p class="text-slate-300">Based on your location and date, there is a 65% probability of favorable conditions for an outdoor event. However, our analysis of historical data shows a 25% chance of afternoon showers between 2 PM and 5 PM. We recommend having a contingency plan, such as tents or an indoor space, ready for your guests.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .dashboard-wrapper {
+        background: linear-gradient(-45deg, #1e293b, #0f172a, #1e293b, #334155);
+        background-size: 400% 400%;
+        animation: gradientBG 20s ease infinite;
+        padding: 1.5rem; /* p-6 */
+        margin: -1.5rem; /* cancel out parent padding if any */
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .card-base {
+        background-color: rgba(30, 41, 59, 0.3); /* bg-slate-800/30 */
+        backdrop-filter: blur(4px);
+        border: 1px solid rgb(51 65 85); /* border-slate-700 */
+        border-radius: 1rem; /* rounded-2xl */
+        padding: 1.5rem; /* p-6 */
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card-base:hover {
+        background-color: rgba(51, 65, 85, 0.5); /* hover:bg-slate-700/50 */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: translateY(-4px);
+    }
+
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animated-section {
+        animation: slideInUp 0.6s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .tab-btn {
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: #94a3b8; /* text-slate-400 */
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    .tab-btn:hover {
+        color: white;
+    }
+    .tab-btn.active {
+        color: #38bdf8; /* text-sky-400 */
+        border-bottom-color: #38bdf8;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const chartTextColor = '#94a3b8'; // text-slate-400
+    const chartGridColor = 'rgba(148, 163, 184, 0.1)';
+
+    // Staggered animations
+    const sections = document.querySelectorAll('.animated-section');
+    sections.forEach((section, index) => {
+        section.style.animationDelay = `${index * 0.15}s`;
+    });
+
+    // Climate Shift Chart
+    const climateCtx = document.getElementById('climate-shift-chart');
+    if (climateCtx) {
+        new Chart(climateCtx, {
+            type: 'line',
+            data: {
+                labels: ['2005', '2010', '2015', '2020', '2025 (Forecast)'],
+                datasets: [{
+                    label: 'Avg. Max Temperature on Oct 26 (°C)',
+                    data: [18.5, 19, 19.5, 20, 22],
+                    borderColor: '#f87171', // text-red-400
+                    backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                height: 300,
+                scales: {
+                    y: {
+                        ticks: { color: chartTextColor },
+                        grid: { color: chartGridColor },
+                        title: { display: true, text: 'Temperature (°C)', color: chartTextColor }
+                    },
+                    x: {
+                        ticks: { color: chartTextColor },
+                        grid: { color: chartGridColor }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Historical Temperature Trend for October 26th',
+                        color: 'white',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

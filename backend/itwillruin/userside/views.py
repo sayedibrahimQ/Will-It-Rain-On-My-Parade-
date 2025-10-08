@@ -1,170 +1,161 @@
+"""
+Django views for the Parade Weather application.
+
+This file implements modern, asynchronous views to provide a responsive user experience.
+- Standard views render the page templates.
+- An async API endpoint handles data-intensive requests for weather predictions,
+  allowing the frontend to load immediately and display data as it becomes available.
+"""
 import json
+import asyncio
+import logging
 from django.shortcuts import render
-from django.http import HttpResponse
-from .utils import get_city_from_latlon , get_weather_analysis_json 
-import logging # Using logging is better for production
-from dotenv import load_dotenv
+from django.http import JsonResponse, HttpResponseBadRequest
+from asgiref.sync import sync_to_async
 from datetime import datetime
-from .Forecasting_pipline import predict_weather
-# It's good practice to set up a logger
+
+# It's good practice to import from your app's modules.
+# We assume the new weather model is in 'weather_model.py'.
+from .weather_model import get_weather_prediction_for_day
+from .utils import get_city_from_latlon, get_weather_analysis_json
+
+# A single logger for the views module is a good practice.
 logger = logging.getLogger(__name__)
 
+# --- Static Page Views ---
 
-# Load environment variables from .env file
-load_dotenv()
-
-def home(request):
+def home_view(request):
+    """Renders the home page."""
     return render(request, 'index.html')
 
-def about(request):
-    return render(request, 'about.html')
-
-def team(request):
-    return render(request, 'team.html')
-
-def map(request):
+def map_view(request):
+    """Renders the prediction page with the map."""
     return render(request, 'map.html')
 
-def dashboard(request):
-    
-    if request.method == "POST":
-        location = request.POST.get("location")  # text input (if user typed)
-        # hidden input (from map click)
-        date = request.POST.get("date")
-        # convert string -> datetime object
-        date_obj = datetime.strptime(date, "%Y-%m-%d").date()
+def insights_view(request):
+    """Renders the AI insights page."""
+    return render(request, 'insights.html')
 
-        # format year-month only
-        year_month = date_obj.strftime("%Y-%m")
-        lat = request.POST.get("latitude")  
-        lon = request.POST.get("longitude")  
-        location = get_city_from_latlon(lat, lon)
-        
-        result_data = predict_weather(lat, lon, year_month)
-        forecast_trend_data = result_data.get("forecast_trend", [])
-        forecast_trend_json = json.dumps(forecast_trend_data)
-        historical_data = {
-            "location": location, 
-            "time_period": {date_obj.strftime('%b')}, 
-            "avg_temp_c": (result_data['temperature']['upper'] + result_data['temperature']['lower']) / 2,
-            "chance_of_rain_percent": (result_data['rainfall']['upper'] + result_data['rainfall']['lower']) / 2,
-            "avg_wind_speed_kph": (result_data['windspeed']['upper'] + result_data['windspeed']['lower']) / 2,
-            "dominant_condition": result_data['condition'],
-            "heat_index_advisory_chance_percent": result_data['humidity']['value'] * result_data['temperature']['value'] * 0.35,
-        }
-        ai_insights = get_weather_analysis_json(historical_data)
-        # ai_insights = None
-        return render(request, 'dashboard.html', {"location": location, "lat": lat, "lon": lon, "date": date, 'ai_insights': ai_insights, 'day_data': result_data, 'forecast_trend_json': forecast_trend_json })
-
-    return render(request, 'dashboard.html')
+def about_view(request):
+    """Renders the about page."""
+    return render(request, 'about.html')
 
 
-
-
-def weather_planner_view(request):
-    context = {}
-    if request.method == 'POST':
-        # --- Cleaned up user input handling ---
-        latlon = request.POST.get("latlon")      # e.g., "29.7604,-95.3698"
-        date = request.POST.get('date')          # e.g., '2025-08-15'
-        lat = latlon.split(",")[0]
-        lon = latlon.split(",")[1]
-        # Determine the location name
-        location = get_city_from_latlon(lat, lon)
-        
-        # --- Fetch and process historical data from NASA APIs ---
-        # This is where your core logic to get data from NASA for the lat, lon, and date goes.
-        # For now, we'll use dummy data as before.
-        
-        # You should replace the hardcoded values with your actual fetched data
-        historical_data = {
-            "location": location, # Use the determined location name
-            "time_period": date.strftime("%Y-%m-%d"), # You would calculate this from the 'date' variable
-            "avg_temp_c": 30,
-            "chance_of_rain_percent": 45,
-            "avg_wind_speed_kph": 10,
-            "dominant_condition": "Humid with afternoon thunderstorms",
-            "heat_index_advisory_chance_percent": 70,
-            "uv_index_avg": 10
-        }
-
-        # --- Call the Gemini utility function to get insights ---
-        ai_insights = get_weather_analysis_json(historical_data)
-
-        # --- Add data to the context for rendering ---
-        context['historical_data'] = historical_data
-        context['ai_insights'] = ai_insights
-        context['submitted'] = True
-
-    return render(request, 'planner.html', context)
-
-
-
-
-
-
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-from io import BytesIO
-
-def download_report(request):
-    # 1. Get query parameters from the URL
-    lat = request.GET.get("lat")
-    lon = request.GET.get("lon")
-    date_str = request.GET.get("date")
-    # ai_insights = request.GET.get("ainsights")
-
-    # 2. Basic validation
-    if not all([lat, lon, date_str]):
-        return HttpResponse("Error: Missing required parameters (lat, lon, date).", status=400)
+async def dashboard_view(request):
+    """
+    Renders the main dashboard.
+    On GET, it shows the prediction page to start a forecast.
+    On POST, it fetches data asynchronously and renders the dashboard with results.
+    """
+    if request.method != 'POST':
+        # A GET request to the dashboard should redirect to the prediction page
+        # as there's no data to display yet.
+        return render(request, 'map.html')
 
     try:
-        # 3. Re-run the data generation logic (same as in dashboard view)
-        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
-        year_month = date_obj.strftime("%Y-%m")
+        lat = request.POST.get('lat')
+        lon = request.POST.get('lon')
+        date_str = request.POST.get('date')
+
+        if not all([lat, lon, date_str]):
+            # Handle missing data gracefully
+            return render(request, 'nodata.html', {'error': 'Latitude, longitude, and date are required.'})
+
+        # The view is now async, so we can correctly 'await' the coroutine.
+        # This resolves the RuntimeWarning.
+        data = await get_weather_prediction_for_day(lat, lon, date_str)
         
-        location = get_city_from_latlon(lat, lon)
-        result_data = predict_weather(lat, lon, year_month)
+        # Use sync_to_async for synchronous functions to avoid blocking the event loop.
+        city = await sync_to_async(get_city_from_latlon)(lat, lon)
+        
+        # Format date for display
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+        formatted_date = date_obj.strftime("%B %d, %Y")
 
-        # Create historical_data dict for the AI
-        historical_data = {
-            "location": location, 
-            "time_period": date_obj.strftime('%B %Y'), 
-            "avg_temp_c": (result_data['temperature']['upper'] + result_data['temperature']['lower']) / 2,
-            "chance_of_rain_percent": (result_data['rainfall']['upper'] + result_data['rainfall']['lower']) / 2,
-            "avg_wind_speed_kph": (result_data['windspeed']['upper'] + result_data['windspeed']['lower']) / 2,
-            "dominant_condition": result_data['condition'],
-            "heat_index_advisory_chance_percent": result_data['humidity']['value'] * result_data['temperature']['value'] * 0.35,
-        }
-        ai_insights = get_weather_analysis_json(historical_data)
-
-        # 4. Prepare context for the PDF template
         context = {
-            "location": location,
-            "date": date_str,
-            "day_data": result_data,
-            "ai_insights": ai_insights,
-            "generation_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            'date': formatted_date,
+            "city": city,
+            "data": data,
+            # Pass chart data to the template for use with the json_script tag
+            "hourly_chart_data": data.get('hourly_forecast_chart', {}),
+            "historical_chart_data": data.get('historical_comparison_chart', {})
         }
-
-        # 5. Render the HTML template to a string
-        template = get_template('report_template.html')
-        html = template.render(context)
-
-        # 6. Generate the PDF
-        result = BytesIO()
-        pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)
-
-        if not pdf.err:
-            # 7. Create the HTTP response with PDF content
-            response = HttpResponse(result.getvalue(), content_type='application/pdf')
-            # This header tells the browser to download the file
-            filename = f"Weather_Report_{location.replace(' ', '_')}_{date_str}.pdf"
-            response['Content-Disposition'] = f'attachment; filename="{filename}"'
-            return response
+        return render(request, 'dashboard.html', context)
 
     except Exception as e:
-        logger.error(f"Error generating PDF report: {e}")
-        return HttpResponse(f"An error occurred while generating the report: {e}", status=500)
+        logger.error(f"Error in dashboard_view: {e}", exc_info=True)
+        # It's good practice to show an error to the user.
+        return render(request, 'error.html', {'error': 'Could not generate forecast. Please try again.'})
 
-    return HttpResponse("Error generating PDF.", status=500)
+
+# --- Asynchronous API View ---
+
+async def weather_forecast_api(request):
+    """
+    An asynchronous API endpoint to fetch and process weather forecast data.
+    This is called by the JavaScript on the prediction and dashboard pages.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
+
+    try:
+        # Best practice for APIs is to receive JSON data in the request body.
+        data = json.loads(request.body)
+        lat_str = data.get('latitude')
+        lon_str = data.get('longitude')
+        date_str = data.get('date')
+
+        # Validate input parameters
+        if not all([lat_str, lon_str, date_str]):
+            return HttpResponseBadRequest('Missing required parameters: latitude, longitude, date.')
+        
+        lat = float(lat_str)
+        lon = float(lon_str)
+        # Check date format
+        datetime.strptime(date_str, '%Y-%m-%d')
+
+    except (json.JSONDecodeError, TypeError, ValueError) as e:
+        logger.warning(f"Invalid input for weather_forecast_api: {e}")
+        return HttpResponseBadRequest('Invalid input format. Latitude/Longitude must be numbers and date must be YYYY-MM-DD.')
+
+    try:
+        # 1. Await the primary weather data forecast from the model.
+        logger.info(f"Fetching weather prediction for {lat}, {lon} on {date_str}")
+        weather_data = await get_weather_prediction_for_day(lat, lon, date_str)
+
+        # 2. Prepare a richer dataset for the AI analysis call.
+        location_name = await sync_to_async(get_city_from_latlon)(lat, lon)
+        
+        main_overview = weather_data.get('main_overview', {})
+        detailed_metrics = weather_data.get('detailed_metrics', {})
+        ai_prompt_data = {
+            "location": location_name,
+            "date": date_str,
+            "condition": main_overview.get('condition'),
+            "high_temp_c": main_overview.get('high_temp'),
+            "low_temp_c": main_overview.get('low_temp'),
+            "feels_like_c": main_overview.get('feels_like'),
+            "chance_of_rain_percent": main_overview.get('rain_chance'),
+            "precipitation_mm": detailed_metrics.get('precipitation_mm'),
+            "humidity_percent": detailed_metrics.get('humidity_percent'),
+            "wind_speed_kmh": detailed_metrics.get('wind_speed_kmh'),
+            "uv_index": detailed_metrics.get('uv_index'),
+        }
+        
+        # 3. Await the AI insights using the richer data.
+        logger.info("Fetching AI analysis.")
+        ai_insights = await sync_to_async(get_weather_analysis_json)(ai_prompt_data)
+
+        # 4. Combine all results into the final JSON response.
+        full_response = {
+            'weather_data': weather_data,
+            'ai_insights': ai_insights,
+            'location_name': location_name,
+            'request_date': date_str,
+        }
+        return JsonResponse(full_response)
+
+    except Exception as e:
+        logger.error(f"Error in weather_forecast_api: {e}", exc_info=True)
+        return JsonResponse({'error': 'An error occurred while processing your request.'}, status=500)
+
