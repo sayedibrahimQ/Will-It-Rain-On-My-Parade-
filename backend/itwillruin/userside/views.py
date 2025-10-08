@@ -17,7 +17,7 @@ from datetime import datetime
 # It's good practice to import from your app's modules.
 # We assume the new weather model is in 'weather_model.py'.
 from .weather_model import get_weather_prediction_for_day
-from .utils import get_city_from_latlon, get_weather_analysis_json
+from .utils import get_city_from_latlon, get_weather_analysis_json, what_to_wear, activity_planner
 
 # A single logger for the views module is a good practice.
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ async def dashboard_view(request):
         lat = request.POST.get('lat')
         lon = request.POST.get('lon')
         date_str = request.POST.get('date')
-
+        event_type = request.POST.get('event_type')
         if not all([lat, lon, date_str]):
             # Handle missing data gracefully
             return render(request, 'nodata.html', {'error': 'Latitude, longitude, and date are required.'})
@@ -64,13 +64,18 @@ async def dashboard_view(request):
         # The view is now async, so we can correctly 'await' the coroutine.
         # This resolves the RuntimeWarning.
         data = await get_weather_prediction_for_day(lat, lon, date_str)
-        
+        print("#####################################")
+        print(data['main_overview']['feels_like'])
+        print("#####################################")
+        print(data['main_overview']['temp'])
         # Use sync_to_async for synchronous functions to avoid blocking the event loop.
         city = await sync_to_async(get_city_from_latlon)(lat, lon)
         
         # Format date for display
         date_obj = datetime.strptime(date_str, "%Y-%m-%d")
         formatted_date = date_obj.strftime("%B %d, %Y")
+        _what_to_wear = what_to_wear(data['main_overview']['temp'], data['main_overview']['condition'], data['detailed_metrics']['humidity_percent'], data['detailed_metrics']['wind_speed_kmh'], city)
+        _activity_planner = activity_planner(data['main_overview']['temp'], data['main_overview']['condition'], data['detailed_metrics']['humidity_percent'], data['detailed_metrics']['wind_speed_kmh'], city, data['main_overview']['rain_chance'], event_type)
 
         context = {
             'date': formatted_date,
@@ -78,7 +83,10 @@ async def dashboard_view(request):
             "data": data,
             # Pass chart data to the template for use with the json_script tag
             "hourly_chart_data": data.get('hourly_forecast_chart', {}),
-            "historical_chart_data": data.get('historical_comparison_chart', {})
+            "historical_chart_data": data.get('historical_comparison_chart', {}),
+            "what_to_wear": _what_to_wear,
+            "activity_planner": _activity_planner,
+            
         }
         return render(request, 'dashboard.html', context)
 

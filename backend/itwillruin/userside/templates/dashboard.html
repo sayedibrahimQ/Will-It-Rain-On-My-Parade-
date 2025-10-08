@@ -22,7 +22,7 @@
                     <i data-lucide="sun" class="h-16 w-16 text-yellow-400 pulse-animation"></i>
                 {% endif %}
                 <div>
-                    <p class="text-5xl font-bold text-white">{{ data.main_overview.current_temp }}°C</p>
+                    <p class="text-5xl font-bold text-white">{{ data.main_overview.temp }}°C</p>
                     <p class="text-slate-300">{{ data.main_overview.condition }}</p>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                 <div class="card-base text-center">
                     <i data-lucide="sun" class="h-8 w-8 text-orange-400 mx-auto mb-2"></i>
                     <p class="text-slate-400 text-sm">UV Index</p>
-                    <p class="text-white text-xl font-bold">{{ data.detailed_metrics.uv_index }} ({{ data.detailed_metrics.uv_index_text }})</p>
+                    <p class="text-white text-xl font-bold">{{ data.detailed_metrics.uv_index }}</p>
                 </div>
                 <div class="card-base text-center">
                     <i data-lucide="eye" class="h-8 w-8 text-purple-400 mx-auto mb-2"></i>
@@ -80,17 +80,15 @@
                 <div class="card-base">
                     <h3 class="font-bold text-white text-lg mb-3 flex items-center gap-2"><i data-lucide="shirt" class="h-5 w-5 text-sky-400"></i> What to Wear</h3>
                     <div class="flex items-center justify-around text-center">
-                        {% for item in data.plan_your_day.what_to_wear %}
-                        <div><i data-lucide="{{ item.icon }}" class="h-10 w-10 {{ item.color }} mx-auto"></i><p class="text-sm mt-1">{{ item.name }}</p></div>
-                        {% endfor %}
+                     <div><i data-lucide="shirt" class="h-10 w-10 mx-auto"></i><p class="text-sm mt-1">{{ what_to_wear }}</p></div>
                     </div>
                 </div>
                 <div class="card-base">
                     <h3 class="font-bold text-white text-lg mb-3 flex items-center gap-2"><i data-lucide="calendar-check" class="h-5 w-5 text-sky-400"></i> Activity Planner</h3>
                     <ul class="space-y-2 text-slate-300">
-                        {% for activity in data.plan_your_day.activity_planner %}
-                        <li class="flex items-start gap-2"><i data-lucide="{{ activity.icon }}" class="h-5 w-5 {{ activity.color }} flex-shrink-0 mt-1"></i><span><span class="font-semibold">{{ activity.time_period }}:</span> {{ activity.advice }}</span></li>
-                        {% endfor %}
+                        
+                        <li class="flex items-start gap-2"><i data-lucide="chart-no-axes-gantt" class="h-5 w-5 flex-shrink-0 mt-1"></i><span><span class="font-semibold"></span>{{ activity_planner }}</span></li>
+
                     </ul>
                 </div>
             </div>

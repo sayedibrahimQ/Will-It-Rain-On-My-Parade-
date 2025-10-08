@@ -68,6 +68,9 @@ def get_weather_analysis_json(weather_data: dict) -> dict:
         # Your configuration for forcing JSON output
         generate_content_config = types.GenerateContentConfig(
             response_mime_type="application/json",
+            thinking_config = types.ThinkingConfig(
+            thinking_budget=1000,
+            ),
             response_schema=genai.types.Schema(
                 type=genai.types.Type.OBJECT,
                 required=["summary", "parade_planner", "nasa_fun_fact"],
@@ -84,6 +87,7 @@ def get_weather_analysis_json(weather_data: dict) -> dict:
                     ),
                     "nasa_fun_fact": genai.types.Schema(type=genai.types.Type.STRING),
                 },
+                
             ),
             # This system instruction is crucial for guiding the model
             system_instruction=[
@@ -133,12 +137,76 @@ def get_weather_analysis_json(weather_data: dict) -> dict:
 
 
 
+def what_to_wear(temp, cond, humi, wind, loc):
+    client = genai.Client(
+        api_key=os.getenv("GEMINI_API_KEY"),
+    )
+
+    model = "gemini-2.5-flash"
+    contents = [
+        types.Content(
+            role="user",
+            parts=[
+                types.Part.from_text(text=f"""data (temperature: {temp}, condition: {cond}, humidity: {humi}, wind: {wind}, location: {loc})"""),
+            ],
+        ),
+    ]
+    generate_content_config = types.GenerateContentConfig(
+        thinking_config = types.ThinkingConfig(
+            thinking_budget=0,
+        ),
+        system_instruction=[
+            types.Part.from_text(text="""You are a smart outfit assistant. Based on the given weather data (temperature, condition, humidity, wind, and location), suggest what to wear.  
+Give a short, practical outfit recommendation with accessories or advice (e.g., bring an umbrella). the response contain no special chars like @,#,$,%,^,&,*,!,~ 
+Be friendly and concise."""),
+        ],
+    )
+
+    response = client.models.generate_content(
+        model=model,
+        contents=contents,
+        config=generate_content_config,
+    )
+    return response.text
+
+
+
+
+def activity_planner(temp, cond, humi, wind, loc, rain_chance, event_type):
+    client = genai.Client(
+        api_key=os.getenv("GEMINI_API_KEY"),
+    )
+
+    model = "gemini-2.5-flash"
+    contents = [
+        types.Content(
+            role="user",
+            parts=[
+                types.Part.from_text(text=f"""data (temperature: {temp}, condition: {cond}, humidity: {humi}, wind: {wind}, location: {loc}), rain_chance: {rain_chance}), event_type: {event_type}"""),
+            ],
+        ),
+    ]
+    generate_content_config = types.GenerateContentConfig(
+        thinking_config = types.ThinkingConfig(
+            thinking_budget=0,
+        ),
+        system_instruction=[
+            types.Part.from_text(text="""You are an activity planner assistant. Given weather data (rain chance, temperature, wind, etc.), propose whether the outdoor activity should proceed, suggest backup plans, and warn about rain. Be brief and clear. the response contain no special chars like @,#,$,%,^,&,*,!,~"""),
+        ],
+    )
+
+    response = client.models.generate_content(
+        model=model,
+        contents=contents,
+        config=generate_content_config,
+    )
+    return response.text
 
 
 
 
 
-
+print(activity_planner(20, "partly cloudy", 80, 10, "New York City, USA", 50, "parade"))
 
 
 
