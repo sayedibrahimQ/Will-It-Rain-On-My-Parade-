@@ -75,7 +75,7 @@ Clone the repo
 
 Bash
 
-git clone https://github.com/your_username/parade-weather.git
+git clone  [ https://github.com/your_username/parade-weather.git](https://github.com/sayedibrahimQ/Will-It-Rain-On-My-Parade-.git)
 cd parade-weather
 Backend Setup
 
